@@ -1,16 +1,25 @@
-import ToDoList from './ToDoList.jsx';
-import TodoForm from './TodoForm.jsx';
 import { useState } from 'react';
+import ToDoList from './ToDoList';
+import TodoForm from './TodoForm';
 
 function App() {
-  const [newTodo, setnewTodo] = useState('example text');
+  const [todoList, setTodoList] = useState([]);
+
+  const addTodo = (title) => {
+    console.log('todo => ', title);
+    const newTodo = {
+      id: Date.now(),
+      title,
+    };
+    console.log('New todo added => ', newTodo);
+    setTodoList([...todoList, newTodo]);
+  };
 
   return (
     <div>
       <h1>Todos list</h1>
-      <TodoForm />
-      <p>{newTodo}</p>
-      <ToDoList />
+      <TodoForm addTodo={addTodo} />
+      <ToDoList todoList={todoList} />
     </div>
   );
 }
