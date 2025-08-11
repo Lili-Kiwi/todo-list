@@ -6,13 +6,11 @@ function App() {
   const [todoList, setTodoList] = useState([]);
   let isCompleted = false;
   const addTodo = (title) => {
-    console.log('todo => ', title);
     const newTodo = {
       id: Date.now(),
       title,
       isCompleted,
     };
-    console.log('New todo added => ', newTodo);
     setTodoList([...todoList, newTodo]);
   };
 
@@ -29,11 +27,26 @@ function App() {
     setTodoList(updatedTodos);
   }
 
+  const updateTodo = (editedTodo) => {
+    const updatedTodos = todoList.map((todo) => {
+      if (todo.id == editedTodo.id) {
+        return { ...todo, title: editedTodo.title };
+      } else {
+        return todo;
+      }
+    });
+    setTodoList(updatedTodos);
+  };
+  
   return (
     <div>
       <h1>Todos list</h1>
       <TodoForm addTodo={addTodo} />
-      <ToDoList todoList={todoList} onCompleteTodo={completeTodo} />
+      <ToDoList
+        todoList={todoList}
+        onCompleteTodo={completeTodo}
+        onUpdateTodo={updateTodo}
+      />
       {showMessage}
     </div>
   );
