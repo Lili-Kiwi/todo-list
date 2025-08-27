@@ -60,7 +60,9 @@ function App() {
   };
 
   const showMessage =
-    todoList.length > 0 ? null : 'Add todo above to get started';
+    todoList.length > 0 && todoList.every(todo => todo.isCompleted)
+      ? 'Add todo above to get started'
+      : null;
 
   const completeTodo = async (id) => {
     const editedTodo = {};
@@ -212,12 +214,10 @@ function App() {
       {errorMessage && (
         <>
           <hr />
-          <p>
-            Error: {errorMessage}
-            <button onClick={() => setErrorMessage('')}>
-              Dismiss Error Message X
-            </button>
-          </p>
+          <p>Error: {errorMessage}</p>
+          <button onClick={() => setErrorMessage('')}>
+            Dismiss Error Message
+          </button>
         </>
       )}
     </div>
