@@ -6,13 +6,18 @@ import './App.css';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
-const encodeUrl = ({ sortField, sortDirection }) => {
+const encodeUrl = ({ sortField, sortDirection, queryString }) => {
   let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  return encodeURI(`${url}?${sortQuery}`);
+  let searchQuery = '';
+  if (queryString) {
+    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+  }
+  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
 };
 
 function App() {
   const [todoList, setTodoList] = useState([]);
+  const [queryString, setQueryString] = useState('');
   const isCompleted = false;
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +52,7 @@ function App() {
     try {
       setIsSaving(true);
       const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
+        encodeUrl({ sortField, sortDirection, queryString }),
         options
       );
       const { records } = await resp.json();
@@ -108,7 +113,7 @@ function App() {
     };
     try {
       const resp = await fetch(
-        encodeUrl({ sortField, sortDirection }),
+        encodeUrl({ sortField, sortDirection, queryString }),
         options
       );
       if (!resp.ok) {
@@ -143,7 +148,7 @@ function App() {
       };
       try {
         const resp = await fetch(
-          encodeUrl({ sortField, sortDirection }),
+          encodeUrl({ sortField, sortDirection, queryString }),
           options
         );
         const { records } = await resp.json();
@@ -166,7 +171,7 @@ function App() {
       }
     };
     fetchTodos();
-  }, [sortDirection, sortField]);
+  }, [sortDirection, sortField, queryString]);
 
   const updateTodo = async (editedTodo) => {
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
@@ -236,6 +241,8 @@ function App() {
         setSortDirection={setSortDirection}
         sortField={sortField}
         setSortField={setSortField}
+        queryString={queryString}
+        setQueryString={setQueryString}
       />
       {isLoading && <p>Loading...</p>}
       {showMessage}
