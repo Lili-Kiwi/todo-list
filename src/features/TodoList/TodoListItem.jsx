@@ -1,5 +1,5 @@
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -20,6 +20,10 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     onUpdateTodo({ ...todo, title: workingTitle });
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    setWorkingTitle(todo.title);
+  }, [todo]);
 
   return (
     <li>
