@@ -1,3 +1,4 @@
+import styles from './App.module.css';
 import { useState, useEffect } from 'react';
 import ToDoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
@@ -218,8 +219,8 @@ function App() {
     }
   };
   return (
-    <div>
-      <h1>Todos list</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Todos list</h1>
       <TodoForm addTodo={addTodo} isSaving={isSaving} />
       <ToDoList
         todoList={todoList}

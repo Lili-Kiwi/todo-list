@@ -1,10 +1,11 @@
+import styles from './TodoList.module.css';
 import TodoListItem from './TodoListItem';
 
 function TodoList({ todoList, onCompleteTodo, onUpdateTodo }) {
   const filteredTodoList = todoList.filter((todo) => !todo.isCompleted);
 
   return (
-    <ul>
+    <ul className={styles.list}>
       {filteredTodoList.map((todo) => (
         <TodoListItem
           key={todo.id}
