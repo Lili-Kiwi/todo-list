@@ -6,6 +6,13 @@ import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm';
 import './App.css';
 import { useCallback } from 'react';
+import {
+  reducer as todosReducer,
+  actions as todoActions,
+  initialState as initialTodosState,
+} from './reducers/todos.reducer';
+import { useReducer } from 'react';
+
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
 function App() {
@@ -27,6 +34,7 @@ function App() {
 
     return encodeURI(`${url}?${sortQuery}${searchQuery}`);
   }, [sortField, sortDirection, queryString]);
+  const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
 
   const addTodo = async (title) => {
     const newTodo = {
@@ -242,7 +250,10 @@ function App() {
       {errorMessage && (
         <>
           <hr />
-          <div className={styles.errorMessage} style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+          <div
+            className={styles.errorMessage}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}
+          >
             <img src={errorIcon} alt="Error" width={20} height={20} />
             <span>Error: {errorMessage}</span>
             <button onClick={() => setErrorMessage('')}>
