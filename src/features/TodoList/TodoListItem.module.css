@@ -1,0 +1,23 @@
+/* Styles for TodoListItem component */
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75em 1em 0.5em 1em;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fafbfc;
+  transition: background 0.2s;
+}
+
+.itemCompleted {
+  text-decoration: line-through;
+  color: #aaa;
+  background: #f0f0f0;
+  padding-bottom: 0.5em;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5em;
+}
