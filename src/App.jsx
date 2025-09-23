@@ -1,28 +1,38 @@
 import styles from './App.module.css';
-import errorIcon from './assets/error.svg';
 import { useEffect, useCallback, useReducer, useState } from 'react';
-import ToDoList from './features/TodoList/TodoList';
-import TodoForm from './features/TodoForm';
-import TodosViewForm from './features/TodosViewForm';
+import TodosPage from './TodosPage';
 import './App.css';
 import {
   reducer as todosReducer,
   actions as todoActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer';
-
+import Header from './shared/Header';
+import NotFound from './pages/NotFound';
+import About from './pages/About';
+import { useLocation } from 'react-router';
+import { Routes, Route } from 'react-router';
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
 function App() {
-  // useReducer for todos state
   const [todoState, dispatch] = useReducer(todosReducer, initialTodosState);
-
-  // Local state for sort and search controls
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
   const isCompleted = false;
+  const location = useLocation();
+  const [pageTitle, setPageTitle] = useState('Todo List');
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setPageTitle('Todo List');
+    } else if (location.pathname === '/about') {
+      setPageTitle('About');
+    } else {
+      setPageTitle('Not Found');
+    }
+  }, [location]);
 
   const encodeUrl = useCallback(() => {
     let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
@@ -183,41 +193,37 @@ function App() {
     }
   };
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Todos list</h1>
-      <TodoForm addTodo={addTodo} isSaving={todoState.isSaving} />
-      <ToDoList
-        todoList={todoState.todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-      />
-      <hr />
-      <TodosViewForm
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-        sortField={sortField}
-        setSortField={setSortField}
-        queryString={queryString}
-        setQueryString={setQueryString}
-      />
-      {todoState.isLoading && <p>Loading...</p>}
-      {showMessage}
-      {todoState.errorMessage && (
-        <>
-          <hr />
-          <div
-            className={styles.errorMessage}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}
-          >
-            <img src={errorIcon} alt="Error" width={20} height={20} />
-            <span>Error: {todoState.errorMessage}</span>
-            <button onClick={() => dispatch({ type: todoActions.clearError })}>
-              Dismiss Error Message
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+    <>
+      <div className={styles.container}>
+        <Header title={pageTitle} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <TodosPage
+                addTodo={addTodo}
+                isSaving={todoState.isSaving}
+                todoList={todoState.todoList}
+                onCompleteTodo={completeTodo}
+                onUpdateTodo={updateTodo}
+                sortDirection={sortDirection}
+                setSortDirection={setSortDirection}
+                sortField={sortField}
+                setSortField={setSortField}
+                queryString={queryString}
+                setQueryString={setQueryString}
+                isLoading={todoState.isLoading}
+                showMessage={showMessage}
+                errorMessage={todoState.errorMessage}
+                onClearError={() => dispatch({ type: todoActions.clearError })}
+              />
+            }
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/\*" element={<NotFound />} />
+        </Routes>
+      </div>{' '}
+    </>
   );
 }
 
