@@ -1,3 +1,5 @@
+import styles from './App.module.css';
+import errorIcon from './assets/error.svg';
 import { useState, useEffect } from 'react';
 import ToDoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
@@ -218,8 +220,8 @@ function App() {
     }
   };
   return (
-    <div>
-      <h1>Todos list</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Todos list</h1>
       <TodoForm addTodo={addTodo} isSaving={isSaving} />
       <ToDoList
         todoList={todoList}
@@ -240,10 +242,13 @@ function App() {
       {errorMessage && (
         <>
           <hr />
-          <p>Error: {errorMessage}</p>
-          <button onClick={() => setErrorMessage('')}>
-            Dismiss Error Message
-          </button>
+          <div className={styles.errorMessage} style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+            <img src={errorIcon} alt="Error" width={20} height={20} />
+            <span>Error: {errorMessage}</span>
+            <button onClick={() => setErrorMessage('')}>
+              Dismiss Error Message
+            </button>
+          </div>
         </>
       )}
     </div>
