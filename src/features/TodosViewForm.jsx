@@ -55,7 +55,7 @@ const TodosViewForm = ({
           value={localQueryString}
           onChange={(e) => setLocalQueryString(e.target.value)}
         />
-        <StyledButton type="button" onClick={() => setQueryString('')}>
+        <StyledButton type="button" onClick={() => setLocalQueryString('')}>
           Clear
         </StyledButton>
       </div>
