@@ -7,7 +7,7 @@ function TodoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
   const [workingTitle, setWorkingTitle] = useState(todo.title);
 
   const handleCancel = () => {
-    setWorkingTitle(todo.tile);
+    setWorkingTitle(todo.title);
     setIsEditing(false);
   };
 
